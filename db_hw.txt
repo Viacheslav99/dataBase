@@ -1,0 +1,38 @@
+1. Складіть запит для отримання усіх користувачів, відсортовані по імені
+
+SELECT * FROM users ORDER BY users.name
+
+2. Складіть запит для отримання усіх користувачів, вік яких більше 40 років
+
+SELECT * FROM users WHERE age > 40
+
+3. Складіть запит для отримання усіх користувачів, вік яких від 20 до 40 років
+
+SELECT * FROM users WHERE age BETWEEN 20 AND 40
+
+4. Складіть запит для отримання усіх користувачів, на рахунку яких більше 1000 (незалежно від валюти), до результату додати цей баланс
+
+SELECT users.*, accounts.balance
+  FROM users
+  JOIN accounts
+  ON users.id = accounts.user_id
+  WHERE accounts.balance > 1000;
+
+5. Складіть запит для отримання історії транзакцій, згрупувати по терміналам та вивести загальну суму, зняту з кожного терміналу, додати модель терміналу
+
+SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+
+SELECT logs.*, cashboxes.model, SUM(logs.amount)
+FROM logs
+ JOIN cashboxes
+ ON logs.cashbox_id = cashboxes.id
+ GROUP BY cashboxes.id;
+
+6. Складіть запит для отримання суми на балансі кожного терміналу (загальна сума коштів у терміналі)
+SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+
+SELECT cashboxes.model, sum(logs.amount)
+FROM cashboxes
+JOIN logs
+ON cashboxes.id = logs.cashbox_id
+GROUP BY cashboxes.model;
